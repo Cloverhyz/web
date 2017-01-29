@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<script type="text/javascript" src="providerbook/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript" src="/book-web/providerbook/scripts/jquery-2.1.1.js"></script>
 <script type="text/javascript">
 	$(function() {
 		var $div_li = $("#tab_menu ul li button");
@@ -49,7 +49,7 @@
 					<tr>
 						<td style="width: 100%;" align="center" colspan="2">
 							<button type="submit"
-								style="width: 100%; height: 34px; margin-top: 10px;">登录</button>
+								style="width: 100%; height: 34px; margin-top: 10px;">注册</button>
 						</td>
 					</tr>
 				</table>
