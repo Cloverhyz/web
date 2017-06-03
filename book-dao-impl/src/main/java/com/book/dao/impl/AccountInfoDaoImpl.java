@@ -34,7 +34,7 @@ public class AccountInfoDaoImpl implements AccountInfoDao {
 				return criteria.list();
 			}
 		});
-		if (accountInfoMds.size()<=0) {
+		if (accountInfoMds.size() <= 0) {
 			return null;
 		} else {
 			return accountInfoMds.get(0);
@@ -83,7 +83,26 @@ public class AccountInfoDaoImpl implements AccountInfoDao {
 
 	@Override
 	public void updateAccount(AccountInfoMd accountInfoMd) throws Exception {
-		hibernateTemplate.update(accountInfoMd);
+		AccountInfoMd aInfoMd = queryById(accountInfoMd.getAccountId());
+		if (accountInfoMd.getAccountName() != null) {
+			aInfoMd.setAccountName(accountInfoMd.getAccountName());
+		}
+		if (accountInfoMd.getAccountPassword() != null) {
+			aInfoMd.setAccountPassword(accountInfoMd.getAccountPassword());
+		}
+		if (accountInfoMd.getAddress() != null) {
+			aInfoMd.setAddress(accountInfoMd.getAddress());
+		}
+		if (accountInfoMd.getBindEmail() != null) {
+			aInfoMd.setBindEmail(accountInfoMd.getBindEmail());
+		}
+		if (accountInfoMd.getBindPhone() != null) {
+			aInfoMd.setBindPhone(accountInfoMd.getBindPhone());
+		}
+		if (accountInfoMd.getPicPath() != null) {
+			aInfoMd.setPicPath(accountInfoMd.getPicPath());
+		}
+		hibernateTemplate.update(aInfoMd);
 	}
 
 }

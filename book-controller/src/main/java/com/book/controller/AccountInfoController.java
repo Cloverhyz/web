@@ -57,25 +57,32 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "mlogin")
 	@ResponseBody
-	public String userMLogin(HttpServletRequest request) throws Exception {
-		AccountInfoMd result;
-		result = accountInfoService.queryAccountByName(request.getParameter("accountName"),request.getParameter("accountPassword"));
+	public String userMLogin(HttpServletRequest request)  {
+		AccountInfoMd result = null;
+		try {
+			result = accountInfoService.queryAccountByName(request.getParameter("accountName"),request.getParameter("accountPassword"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result =null;
+		}
 		if (result != null) {
 			request.getSession();
 			//jedisCluster.set(SerializeUtils.serialize(result.getAccountId(), Long.class),SerializeUtils.serialize(session, HttpSession.class));
-			return "redirect:/bookInfo/paperBookUpload";
+			return result.getAccountId().toString();
 		}
 		return "error";
 	}
 
 	@RequestMapping(value = "register")
+	@ResponseBody
 	public String userRegister(AccountInfoMd accountInfoMd) throws Exception {
-		boolean result = false;
-		accountInfoService.insertAccount(accountInfoMd);
-		if (result) {
+		AccountInfoMd result = null;
+		result = accountInfoService.insertAccount(accountInfoMd);
+		if (result!=null) {
 			return "success";
 		}
-		return "accountInfo/login";
+		return "error";
 	}
 
 	@RequestMapping(value = "delete")
@@ -103,6 +110,12 @@ public class AccountInfoController {
 		accountInfoService.updateAccount(accountInfoMd);
 		return new ModelAndView("redirect:/accountInfo/accountInfo");
 	}
+	@RequestMapping(value = "mUpdate")
+	@ResponseBody
+	public String mUserUpdate(AccountInfoMd accountInfoMd) throws Exception {
+		accountInfoService.updateAccount(accountInfoMd);
+		return "success";
+	}
 
 	@RequestMapping(value = "uploadPic")
 	@ResponseBody
@@ -119,6 +132,9 @@ public class AccountInfoController {
 		fileImageOutputStream.write(file.getBytes());
 		fileImageOutputStream.flush();
 		fileImageOutputStream.close();
+		AccountInfoMd accountInfoMd = accountInfoService.queryAccountById(Long.valueOf(accountId));
+		accountInfoMd.setPicPath(path + fileName);
+		accountInfoService.updateAccount(accountInfoMd);
 		return path + fileName;
 	}
 

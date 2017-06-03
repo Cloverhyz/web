@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.alibaba.fastjson.JSONArray;
 import com.book.model.PaperBookMd;
 import com.book.service.PaperBooKService;
+import com.tujia.config.util.ResponseUtil;
 
 @Controller
 @RequestMapping("bookInfo")
@@ -56,11 +59,19 @@ public class BookInfoController {
 	}
 	
 	@RequestMapping("bookInfo")
-	public String getbookInfo(HttpServletRequest request) throws Exception{
+	public void getbookInfo(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Long accountId = (Long) request.getSession().getAttribute("AccountId");
 		System.out.println(accountId);
 		List<PaperBookMd> paperBookMds = paperBooKService.queryAllBook(accountId);
-		request.setAttribute("paperBookMds", paperBookMds);
-		return "bookInfo/bookInfo";
+		ResponseUtil.responseAsString(response, JSONArray.toJSONString(paperBookMds));
+//		request.setAttribute("paperBookMds", paperBookMds);
+//		return "bookInfo/bookInfo";
+	}
+	@RequestMapping("booklist")
+	public void getbookList(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		List<PaperBookMd> paperBookMds = paperBooKService.queryAllBook();
+		ResponseUtil.responseAsString(response, JSONArray.toJSONString(paperBookMds));
+//		request.setAttribute("paperBookMds", paperBookMds);
+//		return "bookInfo/bookInfo";
 	}
 }

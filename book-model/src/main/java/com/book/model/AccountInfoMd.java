@@ -23,6 +23,7 @@ public class AccountInfoMd implements Serializable{
 	private String bindEmail;
 	private String bindPhone;
 	private String picPath;
+	private String address;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +70,12 @@ public class AccountInfoMd implements Serializable{
 	}
 	public void setPicPath(String picPath) {
 		this.picPath = picPath;
+	}
+	@Column(name = "Address")
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

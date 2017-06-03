@@ -19,15 +19,16 @@ public class AccountInfoServiceImpl implements AccountInfoService {
 	public AccountInfoMd queryAccountByName(String accountName, String accountPassword) throws Exception {
 		AccountInfoMd accountInfoMd = accountInfoDao.queryByName(accountName);
 		if (accountInfoMd != null) {
-			return accountInfoMd;
+			if (accountInfoMd.getAccountPassword().equals(accountPassword))
+				return accountInfoMd;
 		}
 		return null;
 	}
 
 	@Override
-	public boolean insertAccount(AccountInfoMd accountInfoMd) throws Exception {
+	public AccountInfoMd insertAccount(AccountInfoMd accountInfoMd) throws Exception {
 		accountInfoDao.insertAccount(accountInfoMd);
-		return false;
+		return accountInfoDao.queryByName(accountInfoMd.getAccountName());
 	}
 
 	@Override

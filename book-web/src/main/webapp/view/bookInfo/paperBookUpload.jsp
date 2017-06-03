@@ -33,6 +33,7 @@
 					<td>书名</td>
 					<td>描述</td>
 					<td>价格</td>
+					<td>数量</td>
 					<td>图片</td>
 				</tr>
 				<tr>
@@ -41,6 +42,8 @@
 					<td><textarea name="description" rows="5" cols="20"
 							placeholder="描述："></textarea></td>
 					<td><input name="bookPrice" type="text" placeholder="价格：">
+					</td>
+					<td><input name="number" type="text" placeholder="数量:">
 					</td>
 					<td><input id="file" name="file" type="file" placeholder="图片：">
 						<input name="bookPicPath" type="hidden" value="0"></td>

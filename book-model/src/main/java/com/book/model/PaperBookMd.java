@@ -23,6 +23,26 @@ public class PaperBookMd implements Serializable {
 	private Integer bookPrice;
 	private String bookPicPath;
 	private String description;
+	private Integer number;
+	private Integer checkd;
+
+	@Column(name = "Checkd")
+	public Integer getCheckd() {
+		return checkd;
+	}
+
+	public void setCheckd(Integer checkd) {
+		this.checkd = checkd;
+	}
+
+	@Column(name = "Number")
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
