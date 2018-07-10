@@ -1,137 +1,155 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd"
-	default-autowire="byName">
+       default-autowire="byName">
 
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl"
-			value="jdbc:mysql://127.0.0.1:3306/book_share?useUnicode=true&amp;characterEncoding=utf8" />
-		<property name="user" value="root" />
-		<property name="password" value="123456" />
-	</bean>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl"
+                  value="jdbc:mysql://127.0.0.1:3306/book_share?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
 
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.format_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.cache.use_second_level_cache">true</prop>
-				<prop key="hibernate.jdbc.batch_size">25</prop>
-				<prop key="javax.persistence.validation.mode">none</prop>
-			</props>
-		</property>
-		<property name="eventListeners">
-			<map>
-				<entry key="merge">
-					<bean
-						class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
-				</entry>
-			</map>
-		</property>
-		<property name="packagesToScan">
-			<list>
-				<value>com.book.model</value>
-			</list>
-		</property>
-	</bean>
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.jdbc.batch_size">25</prop>
+                <prop key="javax.persistence.validation.mode">none</prop>
+            </props>
+        </property>
+        <property name="eventListeners">
+            <map>
+                <entry key="merge">
+                    <bean
+                            class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener"/>
+                </entry>
+            </map>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>com.book.model</value>
+            </list>
+        </property>
+    </bean>
 
-	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
-	<context:component-scan base-package="com.book.dao"
-		use-default-filters="false">
-		<context:include-filter type="annotation"
-			expression="org.springframework.stereotype.Repository" />
-	</context:component-scan>
-	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+    <context:component-scan base-package="com.book.dao"
+                            use-default-filters="false">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
-	<!-- Jedis配置 -->
-	<!-- <bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:redis.properties</value>
-			</list>
-		</property>
-	</bean> -->
-	<!-- <import resource="classpath:/com/book/dao/nodes.xml" /> -->
-	<!-- 连接池配置 -->
-	<!-- <bean id="genericObjectPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="${redis.maxActive}" />
-		<property name="maxIdle" value="${redis.maxIdle}" />
-		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
-	</bean> -->
-	<!-- redis单机 通过连接池 -->
 
-	<!-- <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close"> 
-		<constructor-arg name="poolConfig" ref="genericObjectPoolConfig" /> <constructor-arg 
-		name="host" value="127.0.0.1" /> <constructor-arg name="port" value="7001" 
-		/> <constructor-arg name="password" value="123456" /> </bean> -->
+    <!-- Jedis配置 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:redis.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!--<import resource="classpath:/com/book/dao/nodes.xml"/>-->
 
-	<!-- <bean id="nodes1" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7001" />
-	</bean>
-	<bean id="nodes2" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7002" />
-	</bean>
-	<bean id="nodes3" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7003" />
-	</bean>
-	<bean id="nodes4" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7004" />
-	</bean>
-	<bean id="nodes5" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7005" />
-	</bean>
-	<bean id="nodes6" class="redis.clients.jedis.HostAndPort">
-		<constructor-arg name="host" value="127.0.0.1" />
-		<constructor-arg name="port" value="7006" />
-	</bean> -->
 
-	<!-- <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster"> <constructor-arg 
-		name="nodes" ></constructor-arg> <constructor-arg name="nodes"> <set> <ref 
-		bean="nodes1" /> <ref bean="nodes2" /> <ref bean="nodes3" /> <ref bean="nodes4" 
-		/> <ref bean="nodes5" /> <ref bean="nodes6" /> </set> </constructor-arg> 
-		<constructor-arg name="connectionTimeout" value="300" /> <constructor-arg 
-		name="soTimeout" value="300" /> <constructor-arg name="maxAttempts" value="10" 
-		/> <constructor-arg name="password" value="123456" /> <constructor-arg name="poolConfig" 
-		ref="genericObjectPoolConfig"></constructor-arg> </bean> -->
+    <!-- 连接池配置 -->
+    <bean id="genericObjectPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+    <!-- redis单机 通过连接池 -->
 
-	<!-- 集群配置 -->
-	<!-- <bean id="jedisCluster" class="com.book.dao.jedis.impl.JedisClusterFactory">
-		<property name="addressConfig">
-			<value>classpath:redis.properties</value>
-		</property>
-		<property name="addressKeyPrefix" value="address" />   属性文件里 key的前缀
-		<property name="timeout" value="300000" />
-		<property name="maxRedirections" value="6" />
-		<property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
-		<property name="password" value="123456"></property>
-	</bean> -->
+    <!--<bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
+        <constructor-arg name="poolConfig" ref="genericObjectPoolConfig"/>
+        <constructor-arg
+                name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7001"/>
+        <constructor-arg name="password" value="123456"/>
+    </bean>
+-->
+    <bean id="nodes1" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7001"/>
+    </bean>
+    <bean id="nodes2" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7002"/>
+    </bean>
+    <bean id="nodes3" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7003"/>
+    </bean>
+    <bean id="nodes4" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7004"/>
+    </bean>
+    <bean id="nodes5" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7005"/>
+    </bean>
+    <bean id="nodes6" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg name="host" value="127.0.0.1"/>
+        <constructor-arg name="port" value="7006"/>
+    </bean>
+
+
+    <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster">
+        <constructor-arg name="jedisClusterNode">
+            <set>
+                <ref bean="nodes1"/>
+                <ref bean="nodes2"/>
+                <ref bean="nodes3"/>
+                <ref bean="nodes4"/>
+                <ref bean="nodes5"/>
+                <ref bean="nodes6"/>
+            </set>
+        </constructor-arg>
+        <constructor-arg name="connectionTimeout" value="300"/>
+        <constructor-arg name="soTimeout" value="300"/>
+        <constructor-arg name="maxAttempts" value="10"/>
+        <constructor-arg name="password" value="123456"/>
+        <constructor-arg name="poolConfig" ref="genericObjectPoolConfig"></constructor-arg>
+    </bean>
+
+    <!-- 集群配置 -->
+    <!--<bean id="jedisCluster" class="com.book.dao.jedis.impl.JedisClusterFactory">
+        <property name="addressConfig">
+            <value>classpath:redis.properties</value>
+        </property>
+        <property name="addressKeyPrefix" value="address"/>
+        &lt;!&ndash;属性文件里 key的前缀&ndash;&gt;
+        <property name="timeout" value="300000"/>
+        <property name="maxRedirections" value="6"/>
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig"/>
+        <property name="password" value="123456"></property>
+    </bean>
+-->
 
 </beans>
 	
